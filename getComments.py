@@ -19,66 +19,24 @@ returnjson  = call.json()
 #print '\n'.join([l.rstrip() for l in  s.splitlines()])
 
 
-def getComments(call):
-	for item in call:
-			item["data"]
+comments = []
+def getRedditComments(call):
+	if call["data"]["children"]:
+		children = call["data"]["children"]
+		for child in children:
+			if child["data"]:
+				comments.append([child["data"]["body"]])
+				if child["data"]["replies"]:
+					getRedditComments(child["data"]["replies"])
+					print '1'	
+	
+
+getRedditComments(returnjson[1])
+
+print comments
 
 
-#getComments(returnjson)
-
-
-
-second_dict = returnjson[1]
-
-
-
-
-#2nd one is bigger
-insidesecond = second_dict["data"]
-
-
-
-
-#within children within the 2nd object
-children = insidesecond["children"]
-s = json.dumps(children, sort_keys=True, indent=4 * ' ')
-print s
-
-#this doesn't write how it prints
-with open('samplejson.txt','w') as outfile:
-	json.dump(s,outfile)
-
-
-first_child = children[0]
-f_child_data = first_child["data"]
-#for i in f_child_data:
-#	print i
-
-
-
-#there exists another dict
-children_first_dict = children[0]
-
-#for key in children_first_dict:
-#	print "key is", key
-
-#prints "t1" what is that?
-#print(children_first_dict["kind"])
-
-#comments seem to be here
-data = children_first_dict["data"]
-#print type(data)
-
-#pretty print
-s = json.dumps(data, sort_keys=True, indent=4 * ' ')
-#print s
-#print '\n'.join([l.rstrip() for l in  s.splitlines()])
-
-
-#print data["body"]
-
-#this is type 'unicode'
-#insidesecond["modhash"]
-
-#this is a list
-#insidesecond["children"]
+with open('reddit_comments.csv','wb') as f:
+	writer = csv.writer(f)
+	for comment in comments:
+		writer.writerows([comment])
