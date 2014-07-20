@@ -19,8 +19,9 @@ returnjson  = call.json()
 #print '\n'.join([l.rstrip() for l in  s.splitlines()])
 
 
-comments = []
+
 def getRedditComments(call):
+	comments = []
 	if call["data"]["children"]:
 		children = call["data"]["children"]
 		for child in children:
@@ -29,9 +30,9 @@ def getRedditComments(call):
 				if child["data"]["replies"]:
 					getRedditComments(child["data"]["replies"])
 					print '1'	
-	
+	return comments
 
-getRedditComments(returnjson[1])
+comments = getRedditComments(returnjson[1])
 
 print comments
 
